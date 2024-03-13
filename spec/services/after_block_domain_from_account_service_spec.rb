@@ -9,18 +9,13 @@ RSpec.describe AfterBlockDomainFromAccountService do
   let!(:alice) { Fabricate(:account, username: 'alice') }
 
   before do
-    allow(ActivityPub::DeliveryWorker).to receive(:perform_async)
+    wolf.follow!(alice)
   end
 
-  it 'purge followers from blocked domain' do
-    wolf.follow!(alice)
-    subject.call(alice, 'evil.org')
-    expect(wolf.following?(alice)).to be false
-  end
+  it 'purge followers from blocked domain and sends `Reject->Follow` accordingly' do
+    expect { subject.call(alice, 'evil.org') }
+      .to change { wolf.following?(alice) }.from(true).to(false)
 
-  it 'sends Reject->Follow to followers from blocked domain' do
-    wolf.follow!(alice)
-    subject.call(alice, 'evil.org')
-    expect(ActivityPub::DeliveryWorker).to have_received(:perform_async).once
+    expect(ActivityPub::DeliveryWorker).to have_enqueued_sidekiq_job(/Reject/, alice.id, wolf.inbox_url)
   end
 end
