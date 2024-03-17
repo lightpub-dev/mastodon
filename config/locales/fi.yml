@@ -1867,7 +1867,9 @@ fi:
       follows_subtitle: Seuraa tunnettuja tilejä
       follows_title: Ehdotuksia seurattavaksi
       follows_view_more: Näytä lisää seurattavia henkilöitä
-      hashtags_recent_count: "%{people} henkilöä viimeisenä %{days} päivänä"
+      hashtags_recent_count:
+        one: "%{people} henkilö viimeisen 2 päivän aikana"
+        other: "%{people} henkilöä viimeisen 2 päivän aikana"
       hashtags_subtitle: Tutki, mikä on ollut suosittua viimeisenä 2 päivänä
       hashtags_title: Suositut aihetunnisteet
       hashtags_view_more: Näytä lisää suosittuja aihetunnisteita
